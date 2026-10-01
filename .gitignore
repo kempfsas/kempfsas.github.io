@@ -1,0 +1,8 @@
+# Bewerbungsunterlagen und Arbeitsmaterial - bleibt lokal, wird nicht veroeffentlicht.
+# Das Repo ist oeffentlich (GitHub Pages), Schlachtplan/Motivationsschreiben gehoeren nicht dorthin.
+material/
+
+# Ausgangs-Zip
+*.zip
+
+.DS_Store

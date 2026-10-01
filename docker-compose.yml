@@ -1,0 +1,18 @@
+services:
+  portfolio:
+    build: .
+    image: kempf-portfolio:local
+    container_name: kempf-portfolio
+    ports:
+      - "${PORT:-8081}:8080"
+    restart: unless-stopped
+    # Live-Modus: Dateien aus dem Repo werden direkt ausgeliefert,
+    # Änderungen sind nach einem Reload im Browser sichtbar (kein Rebuild).
+    volumes:
+      # Nur Ordner mounten, nie einzelne Dateien: ein Einzeldatei-Mount haengt an
+      # der Inode und liefert nach einem Lauf von build.py die alte Fassung aus.
+      # index.html und 404.html kommen daher ueber /src (siehe docker/nginx.conf).
+      - .:/src:ro
+      - ./assets:/usr/share/nginx/html/assets:ro
+      - ./work:/usr/share/nginx/html/work:ro
+      - ./blog:/usr/share/nginx/html/blog:ro

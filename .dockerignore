@@ -1,0 +1,8 @@
+.git
+.github
+archiv
+material
+docker-compose.yml
+*.zip
+*.md
+build.py
