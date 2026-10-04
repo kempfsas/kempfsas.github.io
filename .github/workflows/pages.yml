@@ -20,6 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Seiten aus content/*.md neu erzeugen, damit immer der Markdown-Stand
+      # online geht - auch wenn build.py lokal nicht gelaufen ist.
+      - name: Seiten aus Markdown erzeugen
+        run: python3 build.py
+
       # Nur die Portfolio-Dateien veroeffentlichen.
       - name: Seite zusammenstellen
         run: |

@@ -12,12 +12,14 @@ index.html                  Startseite (Hero, Kennzahlen, Projekte, About, Konta
 404.html                    Fehlerseite im Seitenstil
 work/                       7 Projektseiten (google-ads, paid-social, tiktok-top-ads,
                             landing-page, linkedin-content, video-content, ux-ui)
-blog/                       Insights: index.html + 3 Beiträge
+blog/                       Insights: index.html + 5 Beiträge
+content/work/*.md           Texte der Projektseiten (Quelle für work/)
+content/insights/*.md       Texte der Insights-Beiträge (Quelle für blog/)
 assets/style.css            gesamtes Styling (Farben in :root, --accent ist das Blau)
 assets/waves.js             animierte Wellenlinien im Hintergrund
 assets/fonts/               Figtree (Open Font License)
 assets/img/                 Projektbilder und Fotos
-build.py                    optional: erzeugt die HTML-Seiten aus den Texten im Script neu
+build.py                    erzeugt index.html, work/ und blog/ aus content/*.md
 Dockerfile, docker-compose.yml, docker/nginx.conf
                             lokales Deployment zum Ansehen und Testen
 material/                   Bewerbungsunterlagen, nicht im Git (siehe unten)
@@ -71,16 +73,14 @@ normaler Webspace per FTP.
 
 ## Offene Punkte vor dem Livegang
 
-1. Platzhalter in eckigen Klammern füllen — Suche nach `class="placeholder"`:
-   `grep -rn 'class="placeholder"' index.html work blog`.
-   Betrifft vor allem Resultate mit Zahlen, Kunde/Branche und die Sprachniveaus.
+1. Platzhalter in eckigen Klammern füllen — in den Texten stehen sie als `[[…]]`:
+   `grep -rn '\[\[' content`, auf den fertigen Seiten `grep -rn 'class="placeholder"' index.html work blog`.
+   Betrifft vor allem Resultate mit Zahlen, Kunde/Branche.
 2. Bildfreigaben der Arbeitgeber und Kunden prüfen.
 3. Blog-Beiträge in eigene Worte bringen (aktuell Entwürfe).
-4. **`blog/building-a-channel-from-zero.html` ist ein reines Gerüst** — 12 Platzhalter,
-   kein eigener Text. Entweder ausfüllen oder vor dem Livegang den Eintrag aus
-   `POSTS` in `build.py` entfernen. Sonst steht ein halbfertiger Beitrag öffentlich.
-   Wenn er fertig ist: Eintrag in `POSTS` nach oben schieben und das Datum setzen,
-   damit er im Insights-Bereich vorne steht.
+4. **`content/insights/building-a-channel-from-zero.md`**: Die Zahlen stammen vom
+   öffentlichen TikTok-Profil (Stand September 2026) – vor dem Livegang aktualisieren,
+   inklusive Durchschnitt und Anteil der zwei stärksten Posts im Abschnitt "What came of it".
 5. **Der CV liegt bewusst nicht im Repo.** Er enthaelt die private Handynummer und
    waere auf GitHub Pages oeffentlich. Master: `material/05-originale/`. Auf der
    Seite steht stattdessen "Full CV on request". Soll er doch online, vorher die
@@ -91,9 +91,43 @@ normaler Webspace per FTP.
 ## Anpassen
 
 - Farben und Abstände: `:root` in `assets/style.css`.
-- Texte: direkt in den HTML-Dateien, oder in `build.py` ändern und
-  `python3 build.py` ausführen (überschreibt die generierten Seiten).
-- Neues Projekt: Eintrag in `PROJECTS` in `build.py`, Bilder nach `assets/img/`.
+- Texte der Projekte und Insights: die Markdown-Datei in `content/work/` bzw.
+  `content/insights/` bearbeiten, dann `python3 build.py` ausführen. Die HTML-Dateien
+  in `work/` und `blog/` sind erzeugt — dort nicht von Hand ändern, der nächste
+  Build überschreibt sie. Beim Push baut GitHub Actions ohnehin neu.
+- Neues Projekt / neuer Beitrag: Markdown-Datei anlegen (am einfachsten eine
+  bestehende kopieren). Der Dateiname wird zur URL, `order:` bestimmt die Reihenfolge.
+  Bilder nach `assets/img/`.
+- Startseite (Hero, Kennzahlen, About, Kontakt) und das Layout stehen weiter in `build.py`.
+
+### Markdown-Format
+
+```markdown
+---
+order: 1
+date: 2026-10                     # nur bei Insights
+kicker: Paid social
+title: Titel der Seite
+teaser: Kurztext für die Übersicht  # bei Projekten: summary
+---
+
+Erster Absatz = Lead (der grosse Einleitungstext).
+
+## Zwischenüberschrift
+
+Absatz mit **fett**, *kursiv* und [Link](https://example.com).
+
+- Listenpunkt
+
+> Merksatz, wird als hervorgehobene Box dargestellt.
+
+[[Platzhalter]] wird blau markiert, bis der echte Inhalt drinsteht.
+```
+
+Projektseiten: jede `##`-Überschrift wird eine Spalte, der Abschnitt
+`## What I took from it` wird der Merksatz am Ende. Kopffelder dort: `summary`,
+`facts` (Liste `  - Label: Wert`), `media` (`grid`, `grid two`, `grid three`,
+`phones`), optional `media_tone: blue`, `images` (kommagetrennt).
 
 ## material/ — bewusst nicht im Git
 
