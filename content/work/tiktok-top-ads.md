@@ -9,7 +9,9 @@ facts:
   - Format: 9:16 short-form video
   - Goal: Sales
 media: phones
+# Bilder fuer die Kachel auf der Startseite; die Projektseite zeigt die Videos.
 images: tiktok-01.jpg, tiktok-02.jpg
+videos: video-1, video-5
 ---
 
 Performance-driven TikTok ads with a sales focus. Two of the campaigns were featured as Top Ads in the TikTok Creative Center – TikTok's own showcase of high-performing ads.

@@ -124,6 +124,7 @@ def load_project(path):
         facts=[tuple(inline(x.strip()) for x in f.split(":", 1)) for f in meta.get("facts", [])],
         media=(meta["media"], meta.get("media_tone", ""), files) if meta.get("media") else None,
         rows=rows, results=meta.get("results") == "true",
+        videos=[v.strip() for v in meta.get("videos", "").split(",") if v.strip()],
         cols=[] if cases else [(inline(h), inline(t)) for h, t in sections if h != TAKEAWAY],
         cases=cases, takeaway=inline(take[0]) if take else "")
 
@@ -380,6 +381,12 @@ def project(p, nxt, num):
         media = f'<div class="hero-media reveal {kind} {tone}">{imgs}</div>'
     if p["slug"] == "video-content":
         media = video_gallery(1)
+    elif p["videos"]:
+        # Eigene Clips statt Standbildern; abgespielt wie in der Galerie (video.js).
+        media = '<div class="hero-media reveal video-pair"><div class="video-grid">' + "".join(
+            f'<figure><video src="../assets/video/{v}.mp4" poster="../assets/video/{v}.jpg"'
+            f' muted loop playsinline preload="none" aria-label="{p["title"]} – video {i}"></video></figure>'
+            for i, v in enumerate(p["videos"], 1)) + '</div></div>'
     body = f'<div class="cols reveal">{cols}</div>'
     if p["cases"]:
         media = ""
@@ -401,7 +408,7 @@ def project(p, nxt, num):
 <div class="takeaway reveal"><div class="eyebrow">What I took from it</div><p>{p['takeaway']}</p></div>
 <a class="next" href="{nxt['slug']}.html"><span><div class="k">Next project</div><div class="t">{nxt['title']}</div></span><span class="arrow">→</span></a>
 </div></section>
-""" + foot(1, ("video.js",) if p["slug"] == "video-content" else ())
+""" + foot(1, ("video.js",) if p["slug"] == "video-content" or p["videos"] else ())
 
 
 POSTS = load_all("insights", load_post)
